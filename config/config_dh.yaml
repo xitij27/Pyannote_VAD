@@ -1,0 +1,47 @@
+model_name: PyanNet
+
+# train_path: /home4/huyuchen/raw_data/third_dihard_challenge_dev/data
+# train_rttm_path: /home4/huyuchen/raw_data/third_dihard_challenge_dev/data/rttm
+# eval_path:  /home4/huyuchen/raw_data/third_dihard_challenge_eval/data
+# eval_rttm_path: /home4/huyuchen/raw_data/third_dihard_challenge_eval/data/rttm
+
+train_path: /home/users/ntu/kshitij0/scratch/datasets/third_dihard_challenge_dev/data/flac
+train_rttm_path: /home/users/ntu/kshitij0/scratch/datasets/third_dihard_challenge_dev/data/rttm
+eval_path:  /home/users/ntu/kshitij0/scratch/datasets/third_dihard_challenge_eval/data/flac
+eval_rttm_path: /home/users/ntu/kshitij0/scratch/datasets/third_dihard_challenge_eval/data/rttm
+
+use_pre_compute_feature: True
+
+num_workers: 16 # original 16
+output_directory: exp_dh/pyannet
+
+# load pre-trained model from alimeeting data training
+# checkpoint_path: '/home3/huyuchen/pytorch_workplace/vad/egs/far_field_vad/trained_models/best_ckpt_ali'
+max_epoch: 50 # original 50
+batch_size: 16
+chunk_size: 1 # try for any values less than chunk size 5 and stride 4
+chunk_step: 0.4
+rate: 16000
+frame_len: 0.025
+frame_shift: 0.01
+epochs_per_eval: 1
+iters_per_log: 1
+gpus: [0]      # [-1] means using cpu. Original: [0,1]
+
+optimizer_param:
+  optim_type: Adam
+  learning_rate: 1.0e-4
+  max_grad_norm: 5
+
+model_config:
+  num_channels: 1
+  sample_rate: 16000
+  sincnet: {"stride": 10}
+  lstm: {
+    "hidden_size": 128,
+    "num_layers": 2,
+    "bidirectional": True,
+    "monolithic": True,
+    "dropout": 0.0,
+  }
+  linear: {"hidden_size": 128, "num_layers": 2}

@@ -1,0 +1,46 @@
+model_name: PyanNet
+
+train_path: /home4/huyuchen/raw_data/Alimeeting/Train_Ali_far
+train_rttm_path: /home4/huyuchen/raw_data/Alimeeting/Train_Ali_far/rttm_groundtruth
+eval_path:  /home4/huyuchen/raw_data/Alimeeting/Eval_Ali_far
+eval_rttm_path: /home4/huyuchen/raw_data/Alimeeting/Eval_Ali_far/rttm_groundtruth
+
+# add noise: 1. randomly select a noise sample from 'noise_path', at a random snr from 'snr'
+noise_path: /home3/huyuchen/pytorch_workplace/vad/egs/far_field_vad/dihard_noise_samples
+snr: [-5,0,5]
+
+use_pre_compute_feature: True
+
+num_workers: 16
+output_directory: exp_ali/pyannet
+
+# no pretrained model, train from scratch
+checkpoint_path: ''
+max_epoch: 50
+batch_size: 16
+chunk_size: 5 # secpnds
+chunk_step: 4 # seconds (stride)
+rate: 16000
+frame_len: 0.025 # 25ms
+frame_shift: 0.01 # stride for frames
+epochs_per_eval: 1
+iters_per_log: 1
+gpus: [0,1]      # [-1] means using cpu
+
+optimizer_param:
+  optim_type: Adam
+  learning_rate: 1.0e-4
+  max_grad_norm: 5
+
+model_config:
+  num_channels: 1
+  sample_rate: 16000
+  sincnet: {"stride": 10}
+  lstm: {
+    "hidden_size": 128,
+    "num_layers": 2,
+    "bidirectional": True,
+    "monolithic": True,
+    "dropout": 0.0,
+  }
+  linear: {"hidden_size": 128, "num_layers": 2}
